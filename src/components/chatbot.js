@@ -16,7 +16,7 @@ const Chatbot = () => {
     setInput("");
 
     try {
-      const response = await fetch(" https://n8n-server-3-aswm.onrender.com", {
+      const response = await fetch("https://n8n-server-3-aswm.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: input }),
