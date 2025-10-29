@@ -31,7 +31,7 @@ const getOrCreateSessionId = () => {
 try {
   const sessionId = getOrCreateSessionId(); // Get or create session ID
   
-  const response = await fetch("https://n8n-server-3-aswm.onrender.com/webhook-test/chatbot", {
+  const response = await fetch("https://n8n-server-3-aswm.onrender.com/webhook/chatbot", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ 
