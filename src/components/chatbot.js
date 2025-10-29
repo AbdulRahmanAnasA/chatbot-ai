@@ -15,19 +15,37 @@ const Chatbot = () => {
     setMessages(newMessages);
     setInput("");
 
-    try {
-      const response = await fetch("https://n8n-server-3-aswm.onrender.com/webhook/chatbot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: input }),
-      });
+   // Add this at the top of your component (outside the function)
+const getOrCreateSessionId = () => {
+  let sessionId = sessionStorage.getItem('chatSessionId');
+  
+  if (!sessionId) {
+    sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    sessionStorage.setItem('chatSessionId', sessionId);
+  }
+  
+  return sessionId;
+};
 
-      const data = await response.json();
-      const botReply =
-        data.answer || data[0]?.answer || "Sorry, I didn’t get that.";
+// Then update your fetch code:
+try {
+  const sessionId = getOrCreateSessionId(); // Get or create session ID
+  
+  const response = await fetch("https://n8n-server-3-aswm.onrender.com/webhook-test/chatbot", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      question: input,
+      sessionId: sessionId  // Add session ID here
+    }),
+  });
 
-      setMessages([...newMessages, { sender: "bot", text: botReply }]);
-    } catch (error) {
+  const data = await response.json();
+  const botReply =
+    data.answer || data[0]?.answer || "Sorry, I didn't get that.";
+
+  setMessages([...newMessages, { sender: "bot", text: botReply }]);
+} catch (error) {
       console.error("Error:", error);
       setMessages([
         ...newMessages,
